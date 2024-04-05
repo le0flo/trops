@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -24,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-@WebServlet("/login")
+@WebServlet("/account/login")
 public class LoginUser extends HttpServlet {
 
     private String selectUser = "SELECT hash, tipo FROM accounts WHERE email = ?";
@@ -117,18 +115,8 @@ public class LoginUser extends HttpServlet {
                 }
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            Logger logger = LoggerFactory.getLogger(this.getClass());
-            StringBuilder errorBuilder = new StringBuilder();
-
-            errorBuilder.append("#### ERRORE ####");
-            errorBuilder.append(e.getMessage());
-            for (StackTraceElement element : e.getStackTrace()) {
-                errorBuilder.append(element.getClassName() + ": " + element.getLineNumber());
-            }
-            errorBuilder.append("################");
-
-            logger.error(errorBuilder.toString());
             resp.sendError(500);
+            response.handleException(e, this.getClass());
         }
     }
 }

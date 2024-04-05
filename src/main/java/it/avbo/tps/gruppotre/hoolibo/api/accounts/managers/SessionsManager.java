@@ -9,10 +9,6 @@ public class SessionsManager {
 
     private HashMap<UUID, String> activeSessions = new HashMap<>();
 
-    public String retrieveAccount(UUID session) {
-        return activeSessions.get(session);
-    }
-
     public UUID generateSession(String email) {
         UUID uuid = UUID.randomUUID();
 
@@ -22,6 +18,15 @@ public class SessionsManager {
             activeSessions.put(uuid, email);
             return uuid;
         }
+    }
+
+    public String retrieveAccount(UUID session) {
+        return activeSessions.get(session);
+    }
+
+    public UUID unregisterSession(UUID session) {
+        activeSessions.remove(session);
+        return session;
     }
 
     public static SessionsManager getInstance() {
