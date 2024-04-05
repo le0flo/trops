@@ -1,6 +1,10 @@
 package it.avbo.tps.gruppotre.hoolibo.api.accounts.managers;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
 
 public class ResponseManager {
 
@@ -14,6 +18,22 @@ public class ResponseManager {
         response.put("codice", 0);
         response.put("risultato", values);
         return response.toString();
+    }
+
+    public void handleException(Exception e, Class<?> clazz) {
+        Logger logger = LoggerFactory.getLogger(clazz);
+        StringBuilder errorBuilder = new StringBuilder();
+
+        errorBuilder.append("#### ERRORE ####");
+        errorBuilder.append("Orario dell'errore: " + LocalDateTime.now());
+        errorBuilder.append("Posizione:");
+        errorBuilder.append("\t" + e.getMessage());
+        for (StackTraceElement element : e.getStackTrace()) {
+            errorBuilder.append("\t\t" + element.getClassName() + ": " + element.getLineNumber());
+        }
+        errorBuilder.append("################");
+
+        logger.error(errorBuilder.toString());
     }
 
     public String errorNullFields() {
@@ -53,6 +73,14 @@ public class ResponseManager {
         response.put("esito", "fallito");
         response.put("codice", 5);
         response.put("motivazione", "L'utente non è registrato");
+        return response.toString();
+    }
+
+    public String errorSessionNotOwned() {
+        response.clear();
+        response.put("esito", "fallito");
+        response.put("codice", 6);
+        response.put("motivazione", "Non sei il proprietario della sessione indicata");
         return response.toString();
     }
 

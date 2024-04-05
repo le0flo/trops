@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -25,7 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-@WebServlet("/register")
+@WebServlet("/account/register")
 public class RegisterUser extends HttpServlet {
 
     public static final int SALT_BYTES = 32;
@@ -106,18 +104,8 @@ public class RegisterUser extends HttpServlet {
                 }
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            Logger logger = LoggerFactory.getLogger(this.getClass());
-            StringBuilder errorBuilder = new StringBuilder();
-
-            errorBuilder.append("#### ERRORE ####");
-            errorBuilder.append(e.getMessage());
-            for (StackTraceElement element : e.getStackTrace()) {
-                errorBuilder.append(element.getClassName() + ": " + element.getLineNumber());
-            }
-            errorBuilder.append("################");
-
-            logger.error(errorBuilder.toString());
             resp.sendError(500);
+            response.handleException(e, this.getClass());
         }
     }
 }
