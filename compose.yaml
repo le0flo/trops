@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  hoolibo-api:
+    build: .
+    networks:
+      - hoolibo-private-1
+
+networks:
+  hoolibo-private-1:
+    name: mariadb_hoolibo-private-1
+    external: true
