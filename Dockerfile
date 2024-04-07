@@ -10,8 +10,8 @@ RUN mvn clean package
 
 # Deploy
 
-FROM tomcat:10.0-alpine AS tomcat
+FROM tomcat:10.1.20-jdk17 AS tomcat
 
 COPY --from=maven /target/api-1.0.war /api-1.0.war
 
-ENTRYPOINT["catalina.sh", "run"]
+ENTRYPOINT ["catalina.sh", "run"]
