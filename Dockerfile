@@ -1,4 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-17-alpine AS maven
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS maven-stage
 MAINTAINER hoolibo.le0nardo.dev
 WORKDIR /hoolibo
 
@@ -10,8 +10,8 @@ RUN mvn clean package
 
 # Deploy
 
-FROM tomcat:10.1.20-jdk17 AS tomcat
+FROM tomcat:10.1.20-jdk17 AS tomcat-stage
 
-COPY --from=maven /target/api-1.0.war /api-1.0.war
+COPY --from=maven-stage /hoolibo/target/api-1.0.war /usr/local/tomcat/webapps/ROOT.war
 
 ENTRYPOINT ["catalina.sh", "run"]
