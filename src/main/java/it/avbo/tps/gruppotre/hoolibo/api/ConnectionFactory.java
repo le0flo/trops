@@ -14,9 +14,9 @@ public class ConnectionFactory {
     private static void createConnection() {
         try {
             ds = new MariaDbDataSource();
-            ds.setUrl("jdbc:mariadb://localhost:3306/hoolibo");
-            ds.setUser("root");
-            ds.setPassword("athena");
+            ds.setUrl(System.getenv("DATABASE_HOST"));
+            ds.setUser(System.getenv("DATABASE_USER"));
+            ds.setPassword(System.getenv("DATABASE_PASSWORD"));
 
             loadTables();
         } catch (SQLException e) {
