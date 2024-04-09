@@ -1,14 +1,14 @@
-version: "3"
+version: "3.8"
 
 services:
-  hoolibo-api:
+  api:
     build: .
     ports:
-      - 8080:8080
+      - 8001:8080
     networks:
-      - hoolibo-private-1
+      - leonardo-private-1
 
 networks:
-  hoolibo-private-1:
-    name: mariadb_hoolibo-private-1
+  leonardo-private-1:
+    name: mariadb_leonardo-private-1
     external: true
