@@ -3,6 +3,10 @@ version: "3.8"
 services:
   api:
     build: .
+    environment:
+      - DATABASE_HOST=jdbc:mariadb://db:3306/hoolibo
+      - DATABASE_USER=${HOOLIBO_DB_USER}
+      - DATABASE_PASSWORD=${HOOLIBO_DB_PASSWORD}
     ports:
       - 8001:8080
     networks:
