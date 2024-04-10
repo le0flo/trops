@@ -1,5 +1,5 @@
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS maven-stage
-MAINTAINER hoolibo.le0nardo.dev
+MAINTAINER gruppotre
 WORKDIR /hoolibo
 
 # Build del progetto
