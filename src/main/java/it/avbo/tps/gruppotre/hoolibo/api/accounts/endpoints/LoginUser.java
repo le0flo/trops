@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-@WebServlet("/account/login")
+@WebServlet("/account/-login")
 public class LoginUser extends HttpServlet {
 
     private String selectUser = "SELECT hash, tipo FROM accounts WHERE email = ?";
