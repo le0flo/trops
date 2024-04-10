@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -70,18 +71,21 @@ public class RegisterUser extends HttpServlet {
         String password = req.getParameter("password");
         String nome = req.getParameter("nome");
         String cognome = req.getParameter("cognome");
-        String data_nascita = req.getParameter("data_nascita");
-        String cod_fis = req.getParameter("cod_fis");
-        String cod_scuola = req.getParameter("cod_scuola");
+        String data_nascita_string = req.getParameter("data_nascita");
 
-        Pattern cod_fis_regex = Pattern.compile("/^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$/i");
+        String cod_fis = req.getParameter("cod_fis").toUpperCase();
+        String cod_scuola = req.getParameter("cod_scuola").toUpperCase();
+
         Pattern email_regex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         Pattern password_regex = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
+        Pattern cod_fis_regex = Pattern.compile("^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$");
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement selectUserStatement = connection.prepareStatement(selectUser); PreparedStatement insertUserStatement = connection.prepareStatement(insertUser)) {
-            if (email == null || password == null || nome == null || cognome == null) {
+            Date data_nascita = Date.valueOf(data_nascita_string);
+
+            if (email == null || password == null || nome == null || cognome == null || data_nascita == null || cod_fis == null || cod_scuola == null) {
                 writer.println(response.errorNullFields());
-            } else if (cod_fis_regex.matcher(cod_fis).find() && email_regex.matcher(email).find() && password_regex.matcher(password).find()) {
+            } else if (email_regex.matcher(email).find() && password_regex.matcher(password).find() && cod_fis_regex.matcher(cod_fis).find()) {
                 selectUserStatement.setString(1, email);
 
                 if (selectUserStatement.executeQuery().next()) {
@@ -93,7 +97,7 @@ public class RegisterUser extends HttpServlet {
                     insertUserStatement.setString(2, hash);
                     insertUserStatement.setString(3, nome);
                     insertUserStatement.setString(4, cognome);
-                    insertUserStatement.setString(5, data_nascita);
+                    insertUserStatement.setDate(5, data_nascita);
                     insertUserStatement.setString(6, cod_fis);
                     insertUserStatement.setString(7, cod_scuola);
                     insertUserStatement.execute();
@@ -107,7 +111,7 @@ public class RegisterUser extends HttpServlet {
                     writer.println(response.success(values));
                 }
             } else {
-                // TODO messaggio di errore
+                writer.println(response.errorInvalidFieldFormat());
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             resp.sendError(500);

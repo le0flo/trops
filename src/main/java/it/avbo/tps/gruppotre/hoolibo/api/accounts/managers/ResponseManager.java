@@ -40,22 +40,30 @@ public class ResponseManager {
         response.clear();
         response.put("esito", "fallito");
         response.put("codice", 1);
-        response.put("motivazione", "uno o più campi risultano nulli");
+        response.put("motivazione", "Uno o più campi risultano nulli");
+        return response.toString();
+    }
+
+    public String errorInvalidFieldFormat() {
+        response.clear();
+        response.put("esito", "fallito");
+        response.put("codice", 2);
+        response.put("motivazione", "Uno o più campi non rispettano i formati prestabiliti");
         return response.toString();
     }
 
     public String errorAlreadyRegistered() {
         response.clear();
         response.put("esito", "fallito");
-        response.put("codice", 2);
-        response.put("motivazione", "esiste già un utente con quel nome");
+        response.put("codice", 3);
+        response.put("motivazione", "Esiste già un utente con quel nome");
         return response.toString();
     }
 
     public String errorInvalidSessionUUID() {
         response.clear();
         response.put("esito", "fallito");
-        response.put("codice", 3);
+        response.put("codice", 4);
         response.put("motivazione", "L'uuid di sessione non è valido");
         return response.toString();
     }
@@ -63,7 +71,7 @@ public class ResponseManager {
     public String errorInvalidLoginCredentials() {
         response.clear();
         response.put("esito", "fallito");
-        response.put("codice", 4);
+        response.put("codice", 5);
         response.put("motivazione", "Le credenziali di login sono errate");
         return response.toString();
     }
@@ -71,7 +79,7 @@ public class ResponseManager {
     public String errorNotRegistered() {
         response.clear();
         response.put("esito", "fallito");
-        response.put("codice", 5);
+        response.put("codice", 6);
         response.put("motivazione", "L'utente non è registrato");
         return response.toString();
     }
@@ -79,7 +87,7 @@ public class ResponseManager {
     public String errorSessionNotOwned() {
         response.clear();
         response.put("esito", "fallito");
-        response.put("codice", 6);
+        response.put("codice", 7);
         response.put("motivazione", "Non sei il proprietario della sessione indicata");
         return response.toString();
     }
