@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @WebServlet("/account/register")
 public class RegisterUser extends HttpServlet {
@@ -57,6 +58,7 @@ public class RegisterUser extends HttpServlet {
         return ITERATIONS + ":" + toHex(salt) + ":" + toHex(hash);
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
@@ -72,12 +74,14 @@ public class RegisterUser extends HttpServlet {
         String cod_fis = req.getParameter("cod_fis");
         String cod_scuola = req.getParameter("cod_scuola");
 
+        Pattern cod_fis_regex = Pattern.compile("/^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$/i");
+        Pattern email_regex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+        Pattern password_regex = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
+
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement selectUserStatement = connection.prepareStatement(selectUser); PreparedStatement insertUserStatement = connection.prepareStatement(insertUser)) {
             if (email == null || password == null || nome == null || cognome == null) {
                 writer.println(response.errorNullFields());
-            } else {
-                // TODO Implementare quì regex per controllare validità delle varie informazioni
-
+            } else if (cod_fis_regex.matcher(cod_fis).find() && email_regex.matcher(email).find() && password_regex.matcher(password).find()) {
                 selectUserStatement.setString(1, email);
 
                 if (selectUserStatement.executeQuery().next()) {
@@ -102,6 +106,8 @@ public class RegisterUser extends HttpServlet {
 
                     writer.println(response.success(values));
                 }
+            } else {
+                // TODO messaggio di errore
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             resp.sendError(500);
