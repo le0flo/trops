@@ -22,6 +22,9 @@ services:
       - DATABASE_PASSWORD=${HOOLIBO_DB_PASSWORD}
     ports:
       - 8001:8080
+    depends_on:
+      - redis
+      - db
     networks:
       - backend
 

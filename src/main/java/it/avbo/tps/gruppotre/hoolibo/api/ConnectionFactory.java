@@ -18,9 +18,22 @@ public class ConnectionFactory {
             ds.setUser(System.getenv("DATABASE_USER"));
             ds.setPassword(System.getenv("DATABASE_PASSWORD"));
 
+            loadDatabase();
             loadTables();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void loadDatabase() {
+        Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
+
+        String createDatabase = "CREATE DATABASE IF NOT EXISTS hoolibo";
+
+        try (Connection conn = ds.getConnection()) {
+            conn.prepareStatement(createDatabase).execute();
+        } catch (SQLException e) {
+            logger.error("Errore nella creazione delle tabelle");
         }
     }
 
@@ -28,7 +41,7 @@ public class ConnectionFactory {
         Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
         String createAccountTable =
-                "CREATE TABLE IF NOT EXISTS `accounts` (\n" +
+                "CREATE TABLE IF NOT EXISTS `hoolibo`.`accounts` (\n" +
                 "  `tipo` varchar(3) NOT NULL DEFAULT 'USR',\n" +
                 "  `email` varchar(255) NOT NULL,\n" +
                 "  `hash` varchar(255) NOT NULL,\n" +
