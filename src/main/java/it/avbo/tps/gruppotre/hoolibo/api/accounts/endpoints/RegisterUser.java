@@ -85,11 +85,13 @@ public class RegisterUser extends HttpServlet {
 
             if (email == null || password == null || nome == null || cognome == null || data_nascita == null || cod_fis == null || cod_scuola == null) {
                 writer.println(response.errorNullFields());
+                resp.sendError(500);
             } else if (email_regex.matcher(email).find() && password_regex.matcher(password).find() && cod_fis_regex.matcher(cod_fis).find()) {
                 selectUserStatement.setString(1, email);
 
                 if (selectUserStatement.executeQuery().next()) {
                     writer.println(response.errorAlreadyRegistered());
+                    resp.sendError(500);
                 } else {
                     String hash = getPasswordHash(password);
 
@@ -112,10 +114,11 @@ public class RegisterUser extends HttpServlet {
                 }
             } else {
                 writer.println(response.errorInvalidFieldFormat());
+                resp.sendError(500);
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            resp.sendError(500);
             response.handleException(e, this.getClass());
+            resp.sendError(500);
         }
     }
 }

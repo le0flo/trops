@@ -1,0 +1,143 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0
+  title: Hoolibo API
+  description: L'interfaccia per il progetto hoolibo sviluppata dal Gruppo 3
+
+servers:
+  - url: https://api.le0nardo.dev/gruppotre/hoolibo
+
+components:
+  securitySchemes:
+    SessionToken:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    success-response:
+      type: object
+      properties:
+        esito:
+          type: string
+        codice:
+          type: integer
+        risultato:
+          type: object
+    failure-response:
+      type: object
+      properties:
+        esito:
+          type: string
+        codice:
+          type: integer
+        motivazione:
+          type: string
+
+paths:
+  /account/register:
+    post:
+      summary: Registra un account utente nel sistema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - nome
+                - cognome
+                - data_nascita
+                - cod_fis
+                - cod_scuola
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                nome:
+                  type: string
+                cognome:
+                  type: string
+                data_nascita:
+                  type: string
+                cod_fis:
+                  type: string
+                cod_scuola:
+                  type: string
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /account/login:
+    post:
+      summary: Ottieni il token di sessione entrando con le credenziali
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                session:
+                  type: string
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /account/session/deactivate:
+    post:
+      summary: Disattiva un token di sessione
+      security:
+        - SessionToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - deactivated-session
+              properties:
+                deactivated-session:
+                  type: string
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
