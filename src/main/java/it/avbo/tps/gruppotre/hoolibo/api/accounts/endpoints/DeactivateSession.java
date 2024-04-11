@@ -33,6 +33,7 @@ public class DeactivateSession extends HttpServlet {
 
             if (account == null || deactivatedSessionAccount == null) {
                 writer.println(response.errorInvalidSessionUUID());
+                resp.sendError(500);
             } else if (account.equals(deactivatedSessionAccount)) {
                 UUID unregisteredSession = sessionsManager.unregisterSession(deactivatedSession);
 
@@ -42,10 +43,11 @@ public class DeactivateSession extends HttpServlet {
                 writer.println(response.success(values));
             } else {
                 writer.println(response.errorSessionNotOwned());
+                resp.sendError(500);
             }
         } catch (IllegalArgumentException e) {
-            resp.sendError(500);
             response.handleException(e, this.getClass());
+            resp.sendError(500);
         }
     }
 }
