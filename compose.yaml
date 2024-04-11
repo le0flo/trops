@@ -1,8 +1,21 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis
+    restart: always
+    networks:
+      - backend
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: athena
+    networks:
+      - backend
   api:
     build: .
+    restart: always
     environment:
       - DATABASE_HOST=jdbc:mariadb://db:3306/hoolibo
       - DATABASE_USER=${HOOLIBO_DB_USER}
@@ -10,9 +23,9 @@ services:
     ports:
       - 8001:8080
     networks:
-      - leonardo-private-1
+      - backend
 
 networks:
-  leonardo-private-1:
-    name: mariadb_leonardo-private-1
-    external: true
+  backend:
+    name: Hoolibo backend network
+    driver: bridge
