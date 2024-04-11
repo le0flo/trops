@@ -41,6 +41,7 @@ paths:
   /account/register:
     post:
       summary: Registra un account utente nel sistema
+      description: Questo endpoint serve per ottenere il cookie e la tipologia di utente, registrandone uno nuovo. Tutti i dati da inserire sono specificati sotto e devono rispettare alcuni criteri. Esempio, la mail deve essere una mail valida, la password deve avere minimo 8 caratteri e avere 1 carattere speciale, 1 maiuscola, 1 minuscola e 1 numero. Il codice fiscale deve essere un vero codice fiscale e il codice meccanografico dovrà essere uno effettivamente valido (10 caratteri, li potete trovare cercandoli online, quello delle aldini è tra gli esempi di input).
       requestBody:
         required: true
         content:
@@ -93,6 +94,7 @@ paths:
   /account/login:
     post:
       summary: Ottieni il token di sessione entrando con le credenziali
+      description: Questo endpoint potrà essere utilizzato in due modi differenti. Il primo consiste nel fornire soltanto il token di sessione (esempio sottoscritto), e ritornerà successo nel caso sia un token valido. Altrimenti si inseriscono le credenziali (email e password di un account già registrato) e ritornerà, se validi, un token di sessione e il tipo dell'utente.
       requestBody:
         required: true
         content:
@@ -128,6 +130,7 @@ paths:
   /account/session/deactivate:
     post:
       summary: Disattiva un token di sessione
+      description: Questo endpoint serve per deattivare un token di sessione, nel caso si vuole fare logout o roba del genere. Questo endpoint richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. Invece il campo deactivated-session, nel body della richiesta è il token che si vuole disattivare.
       security:
         - SessionToken: []
       requestBody:
