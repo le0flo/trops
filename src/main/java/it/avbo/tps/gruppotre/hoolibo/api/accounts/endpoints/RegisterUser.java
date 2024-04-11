@@ -32,8 +32,8 @@ public class RegisterUser extends HttpServlet {
     public static final int HASH_BYTES = 32;
     private final int ITERATIONS = 65536;
 
-    private String selectUser = "SELECT hash FROM accounts WHERE email = ?";
-    private String insertUser = "INSERT INTO accounts (email,hash,nome,cognome,data_nascita,cod_fis,cod_scuola) VALUES (?,?,?,?,?,?,?)";
+    private String selectUser = "SELECT hash FROM hoolibo.accounts WHERE email = ?";
+    private String insertUser = "INSERT INTO hoolibo.accounts (email,hash,nome,cognome,data_nascita,cod_fis,cod_scuola) VALUES (?,?,?,?,?,?,?)";
 
     private String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);

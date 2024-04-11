@@ -25,7 +25,7 @@ import java.util.UUID;
 @WebServlet("/account/login")
 public class LoginUser extends HttpServlet {
 
-    private String selectUser = "SELECT hash, tipo FROM accounts WHERE email = ?";
+    private String selectUser = "SELECT hash, tipo FROM hoolibo.accounts WHERE email = ?";
 
     private byte[] fromHex(String hex) {
         byte[] binary = new byte[hex.length() / 2];
