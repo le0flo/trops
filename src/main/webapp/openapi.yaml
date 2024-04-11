@@ -20,8 +20,10 @@ components:
       properties:
         esito:
           type: string
+          example: successo
         codice:
           type: integer
+          example: 0
         risultato:
           type: object
     failure-response:
@@ -29,6 +31,7 @@ components:
       properties:
         esito:
           type: string
+          example: fallito
         codice:
           type: integer
         motivazione:
@@ -55,18 +58,25 @@ paths:
               properties:
                 email:
                   type: string
+                  example: test@example.com
                 password:
                   type: string
+                  example: Ciao1234!
                 nome:
                   type: string
+                  example: Mario
                 cognome:
                   type: string
+                  example: Rossi
                 data_nascita:
                   type: string
+                  example: 2001-9-11
                 cod_fis:
                   type: string
+                  example: SPANDR05L06F839I
                 cod_scuola:
                   type: string
+                  example: BOIS01900X
       responses:
         '200':
           description: Successo
@@ -95,10 +105,13 @@ paths:
               properties:
                 email:
                   type: string
+                  example: test@example.com
                 password:
                   type: string
+                  example: Ciao1234!
                 session:
                   type: string
+                  example: 550e8400-e29b-41d4-a716-446655440000
       responses:
         '200':
           description: Successo
@@ -128,6 +141,7 @@ paths:
               properties:
                 deactivated-session:
                   type: string
+                  example: 550e8400-e29b-41d4-a716-446655440000
       responses:
         '200':
           description: Successo
