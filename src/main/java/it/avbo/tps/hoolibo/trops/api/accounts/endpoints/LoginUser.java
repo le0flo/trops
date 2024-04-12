@@ -89,11 +89,11 @@ public class LoginUser extends HttpServlet {
                     writer.println(response.success(values));
                 } else {
                     writer.println(response.errorInvalidSessionUUID());
-                    resp.sendError(500);
+                    resp.setStatus(500);
                 }
             } else if (email == null || password == null) {
                 writer.println(response.errorNullFields());
-                resp.sendError(500);
+                resp.setStatus(500);
             } else {
                 selectUserStatement.setString(1, email);
                 ResultSet rs = selectUserStatement.executeQuery();
@@ -111,16 +111,16 @@ public class LoginUser extends HttpServlet {
                         writer.println(response.success(values));
                     } else {
                         writer.println(response.errorInvalidLoginCredentials());
-                        resp.sendError(500);
+                        resp.setStatus(500);
                     }
                 } else {
                     writer.println(response.errorNotRegistered());
-                    resp.sendError(500);
+                    resp.setStatus(500);
                 }
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             response.handleException(e, this.getClass());
-            resp.sendError(500);
+            resp.setStatus(500);
         }
     }
 }
