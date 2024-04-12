@@ -21,7 +21,7 @@ services:
     restart: always
     environment:
       - DATABASE_HOST=jdbc:mariadb://db:3306/trops
-      - DATABASE_USER=${TROPS_DB_USER}
+      - DATABASE_USER=root
       - DATABASE_PASSWORD=${TROPS_DB_PASSWORD}
     ports:
       - 8001:8080
