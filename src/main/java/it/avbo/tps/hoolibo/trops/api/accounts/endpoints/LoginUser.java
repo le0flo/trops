@@ -1,6 +1,7 @@
 package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
 
 import it.avbo.tps.hoolibo.trops.api.ConnectionFactory;
+import it.avbo.tps.hoolibo.trops.api.Utilities;
 import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.UUID;
 
 @WebServlet("/account/login")
@@ -69,9 +71,11 @@ public class LoginUser extends HttpServlet {
         SessionsManager sessionsManager = SessionsManager.getInstance();
         PrintWriter writer = resp.getWriter();
 
-        String session = req.getParameter("session");
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
+        Map<String, String> postData = Utilities.readPost(req.getReader());
+
+        String session = postData.get("session");
+        String email = postData.get("email");
+        String password = postData.get("password");
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement selectUserStatement = connection.prepareStatement(selectUser)) {
             if (session != null) {
