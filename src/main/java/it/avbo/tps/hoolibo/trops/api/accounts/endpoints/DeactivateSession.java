@@ -1,5 +1,6 @@
 package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
 
+import it.avbo.tps.hoolibo.trops.api.Utilities;
 import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.UUID;
 
 @WebServlet("/account/session/deactivate")
@@ -24,9 +26,11 @@ public class DeactivateSession extends HttpServlet {
         ResponseManager response = ResponseManager.getInstance();
         PrintWriter writer = resp.getWriter();
 
+        Map<String, String> postData = Utilities.readPost(req.getReader());
+
         try {
             UUID authorization = UUID.fromString(req.getHeader("Authorization"));
-            UUID deactivatedSession = UUID.fromString(req.getParameter("deactivated-session"));
+            UUID deactivatedSession = UUID.fromString(postData.get("deactivated-session"));
 
             String account = sessionsManager.retrieveAccount(authorization);
             String deactivatedSessionAccount = sessionsManager.retrieveAccount(deactivatedSession);

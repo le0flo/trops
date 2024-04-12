@@ -1,6 +1,7 @@
 package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
 
 import it.avbo.tps.hoolibo.trops.api.ConnectionFactory;
+import it.avbo.tps.hoolibo.trops.api.Utilities;
 import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
 import jakarta.servlet.ServletException;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -20,6 +22,8 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -65,14 +69,16 @@ public class RegisterUser extends HttpServlet {
         ResponseManager response = ResponseManager.getInstance();
         PrintWriter writer = resp.getWriter();
 
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
-        String nome = req.getParameter("nome");
-        String cognome = req.getParameter("cognome");
-        String data_nascita = req.getParameter("data_nascita");
+        Map<String, String> postData = Utilities.readPost(req.getReader());
 
-        String cod_fis = req.getParameter("cod_fis");
-        String cod_scuola = req.getParameter("cod_scuola");
+        String email = postData.get("email");
+        String password = postData.get("password");
+        String nome = postData.get("nome");
+        String cognome = postData.get("cognome");
+        String data_nascita = postData.get("data_nascita");
+
+        String cod_fis = postData.get("cod_fis");
+        String cod_scuola = postData.get("cod_scuola");
 
         Pattern email_regex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         Pattern password_regex = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
@@ -83,6 +89,8 @@ public class RegisterUser extends HttpServlet {
                 writer.println(response.errorNullFields());
                 resp.setStatus(500);
             } else if (email_regex.matcher(email).find() && password_regex.matcher(password).find() && cod_fis_regex.matcher(cod_fis.toUpperCase()).find()) {
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-M-d");
+
                 selectUserStatement.setString(1, email);
 
                 if (selectUserStatement.executeQuery().next()) {
@@ -104,7 +112,7 @@ public class RegisterUser extends HttpServlet {
                     insertUserStatement.setString(3, hash);
                     insertUserStatement.setString(4, nome);
                     insertUserStatement.setString(5, cognome);
-                    insertUserStatement.setDate(6, Date.valueOf(LocalDate.parse(data_nascita)));
+                    insertUserStatement.setDate(6, Date.valueOf(LocalDate.parse(data_nascita, df)));
                     insertUserStatement.setString(7, cod_fis.toUpperCase());
                     insertUserStatement.execute();
 
