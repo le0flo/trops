@@ -2,7 +2,7 @@
 <!DOCTYPE html>
     <html>
     <head>
-        <title>Hoolibo's API</title>
+        <title>Trops API</title>
     </head>
     <body>
         <p>Il servizio funziona correttamente</p>
