@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -78,7 +79,7 @@ public class RegisterUser extends HttpServlet {
         Pattern cod_fis_regex = Pattern.compile("^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$");
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement selectUserStatement = connection.prepareStatement(selectUser); PreparedStatement insertUserStatement = connection.prepareStatement(insertUser)) {
-            Date data_nascita = Date.valueOf(data_nascita_string);
+            Date data_nascita = Date.valueOf(LocalDate.parse(data_nascita_string));
 
             if (email == null || password == null || nome == null || cognome == null || data_nascita == null || cod_fis == null) {
                 writer.println(response.errorNullFields());
