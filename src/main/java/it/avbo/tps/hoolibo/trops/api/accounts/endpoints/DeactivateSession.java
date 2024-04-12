@@ -29,25 +29,33 @@ public class DeactivateSession extends HttpServlet {
         Map<String, String> postData = Utilities.readPost(req.getReader());
 
         try {
-            UUID authorization = UUID.fromString(req.getHeader("Authorization"));
-            UUID deactivatedSession = UUID.fromString(postData.get("deactivated-session"));
+            String authorizationString = req.getHeader("Authorization");
+            String deactivatedSessionString = postData.get("deactivated-session");
 
-            String account = sessionsManager.retrieveAccount(authorization);
-            String deactivatedSessionAccount = sessionsManager.retrieveAccount(deactivatedSession);
-
-            if (account == null || deactivatedSessionAccount == null) {
-                writer.println(response.errorInvalidSessionUUID());
+            if (authorizationString == null || deactivatedSessionString == null) {
+                writer.println(response.errorNullFields());
                 resp.setStatus(500);
-            } else if (account.equals(deactivatedSessionAccount)) {
-                UUID unregisteredSession = sessionsManager.unregisterSession(deactivatedSession);
-
-                JSONObject values = new JSONObject();
-                values.put("sessione-disattivata", unregisteredSession.toString());
-
-                writer.println(response.success(values));
             } else {
-                writer.println(response.errorSessionNotOwned());
-                resp.setStatus(500);
+                UUID authorization = UUID.fromString(authorizationString);
+                UUID deactivatedSession = UUID.fromString(deactivatedSessionString);
+
+                String account = sessionsManager.retrieveAccount(authorization);
+                String deactivatedSessionAccount = sessionsManager.retrieveAccount(deactivatedSession);
+
+                if (account == null || deactivatedSessionAccount == null) {
+                    writer.println(response.errorInvalidSessionUUID());
+                    resp.setStatus(500);
+                } else if (account.equals(deactivatedSessionAccount)) {
+                    UUID unregisteredSession = sessionsManager.unregisterSession(deactivatedSession);
+
+                    JSONObject values = new JSONObject();
+                    values.put("sessione-disattivata", unregisteredSession.toString());
+
+                    writer.println(response.success(values));
+                } else {
+                    writer.println(response.errorSessionNotOwned());
+                    resp.setStatus(500);
+                }
             }
         } catch (IllegalArgumentException e) {
             response.handleException(e, this.getClass());
