@@ -1,11 +1,10 @@
-version: "3.8"
-
 services:
   redis:
     image: redis
     restart: always
     networks:
       - backend
+
   db:
     image: mariadb
     restart: always
@@ -16,6 +15,7 @@ services:
     volumes:
       - "./target/mariadb:/var/lib/mysql"
       - "./init.sql:/docker-entrypoint-initdb.d/1.sql"
+
   api:
     build: .
     restart: always
