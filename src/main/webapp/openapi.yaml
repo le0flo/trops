@@ -2,11 +2,11 @@ openapi: 3.0.0
 
 info:
   version: '1.0'
-  title: Hoolibo API
-  description: L'interfaccia per il progetto hoolibo sviluppata dal Gruppo 3
+  title: Trops API
+  description: L'interfaccia per il progetto "Trops" sviluppata dal gruppo Hoolibo (gruppo 3).
 
 servers:
-  - url: https://api.le0nardo.dev/gruppotre/hoolibo
+  - url: https://api.le0nardo.dev/trops
 
 components:
   securitySchemes:
