@@ -69,7 +69,7 @@ public class RegisterUser extends HttpServlet {
         String password = req.getParameter("password");
         String nome = req.getParameter("nome");
         String cognome = req.getParameter("cognome");
-        String data_nascita_string = req.getParameter("data_nascita");
+        String data_nascita = req.getParameter("data_nascita");
 
         String cod_fis = req.getParameter("cod_fis");
         String cod_scuola = req.getParameter("cod_scuola");
@@ -79,8 +79,6 @@ public class RegisterUser extends HttpServlet {
         Pattern cod_fis_regex = Pattern.compile("^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$");
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement selectUserStatement = connection.prepareStatement(selectUser); PreparedStatement insertUserStatement = connection.prepareStatement(insertUser)) {
-            Date data_nascita = Date.valueOf(LocalDate.parse(data_nascita_string));
-
             if (email == null || password == null || nome == null || cognome == null || data_nascita == null || cod_fis == null) {
                 writer.println(response.errorNullFields());
                 resp.sendError(500);
@@ -106,7 +104,7 @@ public class RegisterUser extends HttpServlet {
                     insertUserStatement.setString(3, hash);
                     insertUserStatement.setString(4, nome);
                     insertUserStatement.setString(5, cognome);
-                    insertUserStatement.setDate(6, data_nascita);
+                    insertUserStatement.setDate(6, Date.valueOf(LocalDate.parse(data_nascita)));
                     insertUserStatement.setString(7, cod_fis.toUpperCase());
                     insertUserStatement.execute();
 
