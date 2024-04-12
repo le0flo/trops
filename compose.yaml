@@ -14,8 +14,7 @@ services:
     networks:
       - backend
     volumes:
-      - "./target/mariadb/data:${MARIADB_DATA_DIR}"
-      - "./target/mariadb/logs:${MARIADB_LOG_DIR}"
+      - "./target/mariadb:/var/lib/mysql"
       - "./init.sql:/docker-entrypoint-initdb.d/1.sql"
   api:
     build: .
