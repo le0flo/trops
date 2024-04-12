@@ -1,4 +1,4 @@
-package it.avbo.tps.gruppotre.hoolibo.api;
+package it.avbo.tps.hoolibo.trops.api;
 
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.slf4j.Logger;
@@ -18,22 +18,9 @@ public class ConnectionFactory {
             ds.setUser(System.getenv("DATABASE_USER"));
             ds.setPassword(System.getenv("DATABASE_PASSWORD"));
 
-            loadDatabase();
             loadTables();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static void loadDatabase() {
-        Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
-
-        String createDatabase = "CREATE DATABASE IF NOT EXISTS hoolibo";
-
-        try (Connection conn = ds.getConnection()) {
-            conn.prepareStatement(createDatabase).execute();
-        } catch (SQLException e) {
-            logger.error("Errore nella creazione delle tabelle");
         }
     }
 
@@ -41,7 +28,7 @@ public class ConnectionFactory {
         Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
         String createAccountTable =
-                "CREATE TABLE IF NOT EXISTS `hoolibo`.`accounts` (\n" +
+                "CREATE TABLE IF NOT EXISTS `accounts` (\n" +
                 "  `tipo` varchar(3) NOT NULL DEFAULT 'USR',\n" +
                 "  `email` varchar(255) NOT NULL,\n" +
                 "  `hash` varchar(255) NOT NULL,\n" +
@@ -49,7 +36,7 @@ public class ConnectionFactory {
                 "  `cognome` varchar(30) NOT NULL,\n" +
                 "  `data_nascita` date NOT NULL,\n" +
                 "  `cod_fis` varchar(16) NOT NULL,\n" +
-                "  `cod_scuola` varchar(10) NOT NULL,\n" +
+                "  `cod_scuola` varchar(10) DEFAULT NULL,\n" +
                 "  PRIMARY KEY (`email`)\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
 

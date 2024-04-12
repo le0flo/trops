@@ -1,8 +1,8 @@
-package it.avbo.tps.gruppotre.hoolibo.api.accounts.endpoints;
+package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
 
-import it.avbo.tps.gruppotre.hoolibo.api.ConnectionFactory;
-import it.avbo.tps.gruppotre.hoolibo.api.accounts.managers.ResponseManager;
-import it.avbo.tps.gruppotre.hoolibo.api.accounts.managers.SessionsManager;
+import it.avbo.tps.hoolibo.trops.api.ConnectionFactory;
+import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
+import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,10 +18,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -32,8 +29,8 @@ public class RegisterUser extends HttpServlet {
     public static final int HASH_BYTES = 32;
     private final int ITERATIONS = 65536;
 
-    private String selectUser = "SELECT hash FROM hoolibo.accounts WHERE email = ?";
-    private String insertUser = "INSERT INTO hoolibo.accounts (email,hash,nome,cognome,data_nascita,cod_fis,cod_scuola) VALUES (?,?,?,?,?,?,?)";
+    private String selectUser = "SELECT hash FROM accounts WHERE email = ?";
+    private String insertUser = "INSERT INTO accounts (tipo,email,hash,nome,cognome,data_nascita,cod_fis,cod_scuola) VALUES (?,?,?,?,?,?,?,?)";
 
     private String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);
@@ -73,8 +70,8 @@ public class RegisterUser extends HttpServlet {
         String cognome = req.getParameter("cognome");
         String data_nascita_string = req.getParameter("data_nascita");
 
-        String cod_fis = req.getParameter("cod_fis").toUpperCase();
-        String cod_scuola = req.getParameter("cod_scuola").toUpperCase();
+        String cod_fis = req.getParameter("cod_fis");
+        String cod_scuola = req.getParameter("cod_scuola");
 
         Pattern email_regex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         Pattern password_regex = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
@@ -83,10 +80,10 @@ public class RegisterUser extends HttpServlet {
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement selectUserStatement = connection.prepareStatement(selectUser); PreparedStatement insertUserStatement = connection.prepareStatement(insertUser)) {
             Date data_nascita = Date.valueOf(data_nascita_string);
 
-            if (email == null || password == null || nome == null || cognome == null || data_nascita == null || cod_fis == null || cod_scuola == null) {
+            if (email == null || password == null || nome == null || cognome == null || data_nascita == null || cod_fis == null) {
                 writer.println(response.errorNullFields());
                 resp.sendError(500);
-            } else if (email_regex.matcher(email).find() && password_regex.matcher(password).find() && cod_fis_regex.matcher(cod_fis).find()) {
+            } else if (email_regex.matcher(email).find() && password_regex.matcher(password).find() && cod_fis_regex.matcher(cod_fis.toUpperCase()).find()) {
                 selectUserStatement.setString(1, email);
 
                 if (selectUserStatement.executeQuery().next()) {
@@ -94,21 +91,29 @@ public class RegisterUser extends HttpServlet {
                     resp.sendError(500);
                 } else {
                     String hash = getPasswordHash(password);
+                    String tipo = "STU";
 
-                    insertUserStatement.setString(1, email);
-                    insertUserStatement.setString(2, hash);
-                    insertUserStatement.setString(3, nome);
-                    insertUserStatement.setString(4, cognome);
-                    insertUserStatement.setDate(5, data_nascita);
-                    insertUserStatement.setString(6, cod_fis);
-                    insertUserStatement.setString(7, cod_scuola);
+                    if (cod_scuola == null) {
+                        tipo = "USR";
+                        insertUserStatement.setNull(8, Types.VARCHAR);
+                    } else {
+                        insertUserStatement.setString(8, cod_scuola.toUpperCase());
+                    }
+
+                    insertUserStatement.setString(1, tipo);
+                    insertUserStatement.setString(2, email);
+                    insertUserStatement.setString(3, hash);
+                    insertUserStatement.setString(4, nome);
+                    insertUserStatement.setString(5, cognome);
+                    insertUserStatement.setDate(6, data_nascita);
+                    insertUserStatement.setString(7, cod_fis.toUpperCase());
                     insertUserStatement.execute();
 
                     UUID sessionUUID = SessionsManager.getInstance().generateSession(email);
 
                     JSONObject values = new JSONObject();
                     values.put("uuid-sessione", sessionUUID);
-                    values.put("tipo", "USR");
+                    values.put("tipo", tipo);
 
                     writer.println(response.success(values));
                 }

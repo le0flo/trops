@@ -1,4 +1,4 @@
-package it.avbo.tps.gruppotre.hoolibo.api.accounts.managers;
+package it.avbo.tps.hoolibo.trops.api.accounts.managers;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;

@@ -10,16 +10,20 @@ services:
     image: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: athena
+      MARIADB_ROOT_PASSWORD: ${TROPS_DB_PASSWORD}
     networks:
       - backend
+    volumes:
+      - "./target/mariadb/data:${MARIADB_DATA_DIR}"
+      - "./target/mariadb/logs:${MARIADB_LOG_DIR}"
+      - "./init.sql:/docker-entrypoint-initdb.d/1.sql"
   api:
     build: .
     restart: always
     environment:
-      - DATABASE_HOST=jdbc:mariadb://db:3306/hoolibo
-      - DATABASE_USER=${HOOLIBO_DB_USER}
-      - DATABASE_PASSWORD=${HOOLIBO_DB_PASSWORD}
+      - DATABASE_HOST=jdbc:mariadb://db:3306/trops
+      - DATABASE_USER=${TROPS_DB_USER}
+      - DATABASE_PASSWORD=${TROPS_DB_PASSWORD}
     ports:
       - 8001:8080
     depends_on:
@@ -30,5 +34,5 @@ services:
 
 networks:
   backend:
-    name: Hoolibo backend network
+    name: Trops backend network
     driver: bridge

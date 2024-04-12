@@ -1,7 +1,7 @@
-package it.avbo.tps.gruppotre.hoolibo.api.accounts.endpoints;
+package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
 
-import it.avbo.tps.gruppotre.hoolibo.api.accounts.managers.ResponseManager;
-import it.avbo.tps.gruppotre.hoolibo.api.accounts.managers.SessionsManager;
+import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
+import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
