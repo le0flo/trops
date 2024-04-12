@@ -1,8 +1,8 @@
-package it.avbo.tps.gruppotre.hoolibo.api.accounts.endpoints;
+package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
 
-import it.avbo.tps.gruppotre.hoolibo.api.ConnectionFactory;
-import it.avbo.tps.gruppotre.hoolibo.api.accounts.managers.ResponseManager;
-import it.avbo.tps.gruppotre.hoolibo.api.accounts.managers.SessionsManager;
+import it.avbo.tps.hoolibo.trops.api.ConnectionFactory;
+import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
+import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @WebServlet("/account/login")
 public class LoginUser extends HttpServlet {
 
-    private String selectUser = "SELECT hash, tipo FROM hoolibo.accounts WHERE email = ?";
+    private String selectUser = "SELECT hash, tipo FROM accounts WHERE email = ?";
 
     private byte[] fromHex(String hex) {
         byte[] binary = new byte[hex.length() / 2];
