@@ -10,7 +10,7 @@ services:
     image: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${TROPS_DB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${TROPS_DB_PASSWORD}
     networks:
       - backend
     volumes:
