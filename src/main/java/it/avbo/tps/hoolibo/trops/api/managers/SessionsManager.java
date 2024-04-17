@@ -1,9 +1,8 @@
-package it.avbo.tps.hoolibo.trops.api.accounts.managers;
+package it.avbo.tps.hoolibo.trops.api.managers;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public class SessionsManager {

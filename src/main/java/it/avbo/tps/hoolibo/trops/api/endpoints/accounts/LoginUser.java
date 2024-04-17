@@ -1,9 +1,9 @@
-package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
+package it.avbo.tps.hoolibo.trops.api.endpoints.accounts;
 
-import it.avbo.tps.hoolibo.trops.api.ConnectionFactory;
-import it.avbo.tps.hoolibo.trops.api.Utilities;
-import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
-import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
+import it.avbo.tps.hoolibo.trops.api.utils.ConnectionFactory;
+import it.avbo.tps.hoolibo.trops.api.utils.Utilities;
+import it.avbo.tps.hoolibo.trops.api.managers.ResponseManager;
+import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

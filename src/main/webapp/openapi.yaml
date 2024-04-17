@@ -3,11 +3,21 @@ openapi: 3.0.0
 info:
   version: '1.0'
   title: Trops API
-  description: L'interfaccia per il progetto "Trops" sviluppata dal gruppo Hoolibo (gruppo 3). La repository del progetto si trova su https://github.com/le0flo/trops
+  description: L'interfaccia per il progetto "Trops" sviluppata dal gruppo Hoolibo (gruppo 3).
 
 servers:
   - url: https://api.le0nardo.dev/trops
   - url: http://localhost:8080/api_war_exploded
+
+tags:
+  - name: Accounts
+    description: Gli endpoint responsabili per la gestione degli account
+  - name: Events
+    description: Gli endpoint responsabili per la gestione degli eventi
+
+externalDocs:
+  description: Quì trovi la repository con il codice sorgente e degli esempi di implementazione dell'api in JavaScript
+  url: https://github.com/le0flo/trops
 
 components:
   securitySchemes:
@@ -43,6 +53,8 @@ paths:
     post:
       summary: Registra un account utente nel sistema
       description: Questo endpoint serve per ottenere il cookie e la tipologia di utente, registrandone uno nuovo. Tutti i dati da inserire sono specificati sotto e devono rispettare alcuni criteri. Esempio, la mail deve essere una mail valida, la password deve avere minimo 8 caratteri e avere 1 carattere speciale, 1 maiuscola, 1 minuscola e 1 numero. Il codice fiscale deve essere un vero codice fiscale e il codice meccanografico dovrà essere uno effettivamente valido (10 caratteri, li potete trovare cercandoli online, quello delle aldini è tra gli esempi di input).
+      tags:
+        - Accounts
       requestBody:
         required: true
         content:
@@ -92,6 +104,8 @@ paths:
     post:
       summary: Ottieni il token di sessione entrando con le credenziali
       description: Questo endpoint potrà essere utilizzato in due modi differenti. Il primo consiste nel fornire soltanto il token di sessione (esempio sottoscritto), e ritornerà successo nel caso sia un token valido. Altrimenti si inseriscono le credenziali (email e password di un account già registrato) e ritornerà, se validi, un token di sessione e il tipo dell'utente.
+      tags:
+        - Accounts
       requestBody:
         required: true
         content:
@@ -127,7 +141,9 @@ paths:
   /account/session/deactivate:
     post:
       summary: Disattiva un token di sessione
-      description: Questo endpoint serve per deattivare un token di sessione, nel caso si vuole fare logout o roba del genere. Questo endpoint richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. Invece il campo deactivated-session, nel body della richiesta è il token che si vuole disattivare.
+      description: Questo endpoint serve per disattivare un token di sessione, nel caso si vuole fare logout o roba del genere. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. Invece il campo deactivated-session, nel body della richiesta è il token che si vuole disattivare.
+      tags:
+        - Accounts
       security:
         - SessionToken: []
       requestBody:
@@ -142,6 +158,114 @@ paths:
                 deactivated-session:
                   type: string
                   example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /events/create:
+    post:
+      summary: Crea un nuovo evento
+      description: Questo endpoint serve per creare un nuovo evento sportivo, salvarlo nel database e renderlo disponibile al pubblico. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Events
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /events/delete:
+    post:
+      summary: Elimina un event
+      description: Questo endpoint serve per eliminare un evento esistente. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Events
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /events/subscribe:
+    post:
+      summary: Iscriviti ad un evento
+      description: Questo endpoint serve per iscrivere un utente ad un evento esistente. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Events
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /events/unsubscribe:
+    post:
+      summary: Disiscriviti da un evento
+      description: Questo endpoint serve per disiscrivere un utente da un evento a cui sta partecipando o che si è iscritto in passato. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Events
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
       responses:
         '200':
           description: Successo
