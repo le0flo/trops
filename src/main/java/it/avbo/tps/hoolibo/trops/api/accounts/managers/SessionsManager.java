@@ -9,9 +9,6 @@ import java.util.UUID;
 public class SessionsManager {
 
     private static SessionsManager instance;
-
-    private HashMap<UUID, String> activeSessions = new HashMap<>();
-
     private JedisPool pool;
 
     public SessionsManager() {
@@ -21,14 +18,10 @@ public class SessionsManager {
     public UUID generateSession(String email) {
         UUID uuid = UUID.randomUUID();
 
-        if (activeSessions.get(uuid) != null) {
-            return generateSession(email);
-        } else {
-            try (Jedis jedis = pool.getResource()) {
-                jedis.set(uuid.toString(), email);
-            }
-            return uuid;
+        try (Jedis jedis = pool.getResource()) {
+            jedis.set(uuid.toString(), email);
         }
+        return uuid;
     }
 
     public String retrieveAccount(UUID session) {
