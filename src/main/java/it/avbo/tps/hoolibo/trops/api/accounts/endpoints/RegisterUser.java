@@ -76,9 +76,7 @@ public class RegisterUser extends HttpServlet {
         String nome = postData.get("nome");
         String cognome = postData.get("cognome");
         String data_nascita = postData.get("data_nascita");
-
         String cod_fis = postData.get("cod_fis");
-        String cod_scuola = postData.get("cod_scuola");
 
         Pattern email_regex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         Pattern password_regex = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
@@ -97,15 +95,14 @@ public class RegisterUser extends HttpServlet {
                     writer.println(response.errorAlreadyRegistered());
                     resp.setStatus(500);
                 } else {
-                    String hash = getPasswordHash(password);
-                    String tipo = "STU";
-
-                    if (cod_scuola == null) {
-                        tipo = "USR";
-                        insertUserStatement.setNull(8, Types.VARCHAR);
-                    } else {
-                        insertUserStatement.setString(8, cod_scuola.toUpperCase());
+                    String tipo = "USR";
+                    if (email.endsWith("@aldini.istruzioneer.it")) {
+                        tipo = "STU";
+                    } else if (email.endsWith("@avbo.it")) {
+                        tipo = "DOC";
                     }
+
+                    String hash = getPasswordHash(password);
 
                     insertUserStatement.setString(1, tipo);
                     insertUserStatement.setString(2, email);

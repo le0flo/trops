@@ -36,7 +36,6 @@ public class ConnectionFactory {
                 "  `cognome` varchar(30) NOT NULL,\n" +
                 "  `data_nascita` date NOT NULL,\n" +
                 "  `cod_fis` varchar(16) NOT NULL,\n" +
-                "  `cod_scuola` varchar(10) DEFAULT NULL,\n" +
                 "  PRIMARY KEY (`email`)\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
 
