@@ -1,9 +1,9 @@
-package it.avbo.tps.hoolibo.trops.api.accounts.endpoints;
+package it.avbo.tps.hoolibo.trops.api.endpoints.accounts;
 
-import it.avbo.tps.hoolibo.trops.api.ConnectionFactory;
-import it.avbo.tps.hoolibo.trops.api.Utilities;
-import it.avbo.tps.hoolibo.trops.api.accounts.managers.ResponseManager;
-import it.avbo.tps.hoolibo.trops.api.accounts.managers.SessionsManager;
+import it.avbo.tps.hoolibo.trops.api.managers.ResponseManager;
+import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
+import it.avbo.tps.hoolibo.trops.api.utils.ConnectionFactory;
+import it.avbo.tps.hoolibo.trops.api.utils.Utilities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,14 +13,16 @@ import org.json.JSONObject;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
