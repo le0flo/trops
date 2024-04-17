@@ -5,6 +5,6 @@
         <title>Trops API</title>
     </head>
     <body>
-        <p>Il servizio funziona correttamente</p>
+        <p>Il servizio funziona correttamente, la documentazione si trova <a href="swagger.html">quì</a>.</p>
     </body>
 </html>
