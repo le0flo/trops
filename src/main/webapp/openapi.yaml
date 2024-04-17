@@ -3,7 +3,7 @@ openapi: 3.0.0
 info:
   version: '1.0'
   title: Trops API
-  description: L'interfaccia per il progetto "Trops" sviluppata dal gruppo Hoolibo (gruppo 3).
+  description: L'interfaccia per il progetto "Trops" sviluppata dal gruppo Hoolibo (gruppo 3). La repository del progetto si trova su https://github.com/le0flo/trops
 
 servers:
   - url: https://api.le0nardo.dev/trops
@@ -56,7 +56,6 @@ paths:
                 - cognome
                 - data_nascita
                 - cod_fis
-                - cod_scuola
               properties:
                 email:
                   type: string
@@ -76,9 +75,6 @@ paths:
                 cod_fis:
                   type: string
                   example: SPANDR05L06F839I
-                cod_scuola:
-                  type: string
-                  example: BOIS01900X
       responses:
         '200':
           description: Successo
