@@ -35,7 +35,7 @@ public class RegisterUser extends HttpServlet {
     private final int ITERATIONS = 65536;
 
     private String selectUser = "SELECT hash FROM accounts WHERE email = ?";
-    private String insertUser = "INSERT INTO accounts (tipo,email,hash,nome,cognome,data_nascita,cod_fis,cod_scuola) VALUES (?,?,?,?,?,?,?,?)";
+    private String insertUser = "INSERT INTO accounts (tipo,email,hash,nome,cognome,data_nascita,cod_fis) VALUES (?,?,?,?,?,?,?)";
 
     private String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);

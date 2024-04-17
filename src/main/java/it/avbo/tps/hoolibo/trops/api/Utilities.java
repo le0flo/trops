@@ -15,7 +15,9 @@ public class Utilities {
             if (line.startsWith("Content-Disposition: form-data; name=\"")) {
                 key = line.substring("Content-Disposition: form-data; name=\"".length(), line.length()-1);
             } else if (key != null && !line.isBlank()) {
-                values.put(key, line);
+                if (!line.startsWith("-----------------------------")) {
+                    values.put(key, line);
+                }
                 key = null;
             }
         }
