@@ -1,6 +1,6 @@
 package it.avbo.tps.hoolibo.trops.api.endpoints.accounts;
 
-import it.avbo.tps.hoolibo.trops.api.utils.Utilities;
+import it.avbo.tps.hoolibo.trops.api.utils.GeneralUtils;
 import it.avbo.tps.hoolibo.trops.api.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
 import jakarta.servlet.ServletException;
@@ -22,22 +22,19 @@ public class DeactivateSession extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
 
-        SessionsManager sessionsManager = SessionsManager.getInstance();
         ResponseManager response = ResponseManager.getInstance();
-        PrintWriter writer = resp.getWriter();
-
-        Map<String, String> postData = Utilities.readPost(req.getReader());
+        SessionsManager sessionsManager = SessionsManager.getInstance();
+        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
 
         try {
             String authorization = req.getHeader("Authorization");
-            String account = Utilities.checkSession(authorization);
+            String account = GeneralUtils.checkSession(authorization);
 
             String deactivatedSession = postData.get("deactivated-session");
-            String deactivatedSessionAccount = Utilities.checkSession(deactivatedSession);
+            String deactivatedSessionAccount = GeneralUtils.checkSession(deactivatedSession);
 
             if (account == null || deactivatedSessionAccount == null) {
-                writer.println(response.errorInvalidSessionUUID());
-                resp.setStatus(500);
+                response.errorInvalidSessionUUID(resp);
             } else if (account.equals(deactivatedSessionAccount)) {
                 UUID unregisteredSession = UUID.fromString(deactivatedSession);
                 sessionsManager.unregisterSession(unregisteredSession);
@@ -45,14 +42,12 @@ public class DeactivateSession extends HttpServlet {
                 JSONObject values = new JSONObject();
                 values.put("sessione-disattivata", unregisteredSession.toString());
 
-                writer.println(response.success(values));
+                response.success(resp, values);
             } else {
-                writer.println(response.errorSessionNotOwned());
-                resp.setStatus(500);
+                response.errorSessionNotOwned(resp);
             }
         } catch (IllegalArgumentException e) {
-            response.handleException(e, this.getClass());
-            resp.setStatus(500);
+            response.handleException(resp, e, this.getClass());
         }
     }
 }

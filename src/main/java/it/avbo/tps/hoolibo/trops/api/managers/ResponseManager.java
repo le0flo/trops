@@ -1,26 +1,30 @@
 package it.avbo.tps.hoolibo.trops.api.managers;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class ResponseManager {
 
     private static ResponseManager instance;
 
-    private JSONObject response = new JSONObject();
+    private JSONObject message = new JSONObject();
 
-    public String success(JSONObject values) {
-        response.clear();
-        response.put("esito", "successo");
-        response.put("codice", 0);
-        response.put("risultato", values);
-        return response.toString();
+    public void success(HttpServletResponse resp, JSONObject values) throws IOException {
+        message.clear();
+        message.put("esito", "successo");
+        message.put("codice", 0);
+        message.put("risultato", values);
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(200);
     }
 
-    public void handleException(Exception e, Class<?> clazz) {
+    public void handleException(HttpServletResponse resp, Exception e, Class<?> clazz) throws IOException {
         Logger logger = LoggerFactory.getLogger(clazz);
         StringBuilder errorBuilder = new StringBuilder();
 
@@ -31,65 +35,87 @@ public class ResponseManager {
         for (StackTraceElement element : e.getStackTrace()) {
             errorBuilder.append("\t\t" + element.getClassName() + ": " + element.getLineNumber());
         }
+
         errorBuilder.append("################");
-
         logger.error(errorBuilder.toString());
+
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", -1);
+        message.put("motivazione", "Errore interno");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorNullFields() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 1);
-        response.put("motivazione", "Uno o più campi risultano nulli");
-        return response.toString();
+    public void errorNullFields(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 1);
+        message.put("motivazione", "Uno o più campi risultano nulli");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorInvalidFieldFormat() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 2);
-        response.put("motivazione", "Uno o più campi non rispettano i formati prestabiliti");
-        return response.toString();
+    public void errorInvalidFieldFormat(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 2);
+        message.put("motivazione", "Uno o più campi non rispettano i formati prestabiliti");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorAlreadyRegistered() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 3);
-        response.put("motivazione", "Esiste già un utente con quel nome");
-        return response.toString();
+    public void errorAlreadyRegistered(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 3);
+        message.put("motivazione", "Esiste già un utente con quel nome");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorInvalidSessionUUID() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 4);
-        response.put("motivazione", "L'uuid di sessione non è valido");
-        return response.toString();
+    public void errorInvalidSessionUUID(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 4);
+        message.put("motivazione", "L'uuid di sessione non è valido");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorInvalidLoginCredentials() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 5);
-        response.put("motivazione", "Le credenziali di login sono errate");
-        return response.toString();
+    public void errorInvalidLoginCredentials(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 5);
+        message.put("motivazione", "Le credenziali di login sono errate");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorNotRegistered() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 6);
-        response.put("motivazione", "L'utente non è registrato");
-        return response.toString();
+    public void errorNotRegistered(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 6);
+        message.put("motivazione", "L'utente non è registrato");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
-    public String errorSessionNotOwned() {
-        response.clear();
-        response.put("esito", "fallito");
-        response.put("codice", 7);
-        response.put("motivazione", "Non sei il proprietario della sessione indicata");
-        return response.toString();
+    public void errorSessionNotOwned(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 7);
+        message.put("motivazione", "Non sei il proprietario della sessione indicata");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
     }
 
     public static ResponseManager getInstance() {

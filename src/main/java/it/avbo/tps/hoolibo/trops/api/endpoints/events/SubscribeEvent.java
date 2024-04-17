@@ -2,7 +2,7 @@ package it.avbo.tps.hoolibo.trops.api.endpoints.events;
 
 import it.avbo.tps.hoolibo.trops.api.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
-import it.avbo.tps.hoolibo.trops.api.utils.Utilities;
+import it.avbo.tps.hoolibo.trops.api.utils.GeneralUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,25 +20,20 @@ public class SubscribeEvent extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
 
-        SessionsManager sessionsManager = SessionsManager.getInstance();
         ResponseManager response = ResponseManager.getInstance();
-        PrintWriter writer = resp.getWriter();
-
-        Map<String, String> postData = Utilities.readPost(req.getReader());
+        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
 
         try {
             String authorization = req.getHeader("Authorization");
-            String account = Utilities.checkSession(authorization);
+            String account = GeneralUtils.checkSession(authorization);
 
             if (account == null) {
-                writer.println(response.errorInvalidSessionUUID());
-                resp.setStatus(500);
+                response.errorInvalidSessionUUID(resp);
             } else {
-                writer.println(response.success(null));
+                response.success(resp, null);
             }
         } catch (IllegalArgumentException e) {
-            response.handleException(e, this.getClass());
-            resp.setStatus(500);
+            response.handleException(resp, e, this.getClass());
         }
     }
 }

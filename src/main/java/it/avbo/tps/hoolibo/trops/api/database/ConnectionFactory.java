@@ -1,4 +1,4 @@
-package it.avbo.tps.hoolibo.trops.api.utils;
+package it.avbo.tps.hoolibo.trops.api.database;
 
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.slf4j.Logger;
