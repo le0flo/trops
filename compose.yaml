@@ -20,6 +20,7 @@ services:
     build: .
     restart: always
     environment:
+      - REDIS_HOST=redis
       - DATABASE_HOST=jdbc:mariadb://db:3306/trops
       - DATABASE_USER=root
       - DATABASE_PASSWORD=${TROPS_DB_PASSWORD}
