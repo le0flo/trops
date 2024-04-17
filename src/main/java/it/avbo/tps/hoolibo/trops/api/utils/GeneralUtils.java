@@ -1,14 +1,21 @@
 package it.avbo.tps.hoolibo.trops.api.utils;
 
+import it.avbo.tps.hoolibo.trops.api.endpoints.accounts.RegisterUser;
 import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Utilities {
+public class GeneralUtils {
 
     public static Map<String, String> readPost(BufferedReader rd) throws IOException {
         Map<String, String> values = new HashMap<>();
