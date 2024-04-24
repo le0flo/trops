@@ -19,18 +19,18 @@ import java.util.UUID;
 public class DeactivateSession extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
         ResponseManager response = ResponseManager.getInstance();
         SessionsManager sessionsManager = SessionsManager.getInstance();
-        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
+        Map<String, String> requestBodyMap = GeneralUtils.readPost(req.getReader());
 
         try {
             String authorization = req.getHeader("Authorization");
             String account = GeneralUtils.checkSession(authorization);
 
-            String deactivatedSession = postData.get("deactivated-session");
+            String deactivatedSession = requestBodyMap.get("deactivated-session");
             String deactivatedSessionAccount = GeneralUtils.checkSession(deactivatedSession);
 
             if (account == null || deactivatedSessionAccount == null) {

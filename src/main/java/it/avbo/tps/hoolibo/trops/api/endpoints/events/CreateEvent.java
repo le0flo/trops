@@ -1,5 +1,6 @@
 package it.avbo.tps.hoolibo.trops.api.endpoints.events;
 
+import it.avbo.tps.hoolibo.trops.api.database.dao.EventDAO;
 import it.avbo.tps.hoolibo.trops.api.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
 import it.avbo.tps.hoolibo.trops.api.utils.GeneralUtils;
@@ -11,17 +12,30 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @WebServlet("/events/create")
 public class CreateEvent extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
         ResponseManager response = ResponseManager.getInstance();
-        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
+        Map<String, String> requestBodyMap = GeneralUtils.readPost(req.getReader());
+
+        String tipo = requestBodyMap.get("tipo");
+        String sport = requestBodyMap.get("sport");
+        String data_event = requestBodyMap.get("data_event");
+        String max_partecipanti = requestBodyMap.get("max_partecipanti");
+        String titolo = requestBodyMap.get("titolo");
+        String descrizione = requestBodyMap.get("descrizione");
 
         try {
             String authorization = req.getHeader("Authorization");
@@ -29,10 +43,25 @@ public class CreateEvent extends HttpServlet {
 
             if (account == null) {
                 response.errorInvalidSessionUUID(resp);
+            } else if (tipo == null || sport == null || data_event == null || max_partecipanti == null || titolo == null) {
+                response.errorNullFields(resp);
+            } else if (tipo.equals("SCO") || tipo.equals("EXT")) {
+                int maxPartecipanti = Integer.parseInt(max_partecipanti);
+
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-M-d hh:mm:ss");
+                Timestamp data = Timestamp.valueOf(LocalDateTime.parse(data_event ,df));
+
+                boolean success = EventDAO.getInstance().insert(tipo, sport, data, maxPartecipanti, titolo, descrizione, account);
+
+                if (success) {
+                    response.success(resp, null);
+                } else {
+                    response.errorInvalidFieldFormat(resp);
+                }
             } else {
-                response.success(resp, null);
+                response.errorInvalidFieldFormat(resp);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLException e) {
             response.handleException(resp, e, this.getClass());
         }
     }

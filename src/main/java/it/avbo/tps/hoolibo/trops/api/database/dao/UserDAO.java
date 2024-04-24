@@ -46,9 +46,8 @@ public class UserDAO {
             insertUserStmt.setString(5, cognome);
             insertUserStmt.setDate(6, data_nascita);
             insertUserStmt.setString(7, cod_fis.toUpperCase());
-            insertUserStmt.execute();
 
-            return true;
+            return insertUserStmt.executeUpdate() > 0;
         }
     }
 

@@ -31,18 +31,18 @@ import java.util.regex.Pattern;
 public class RegisterUser extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
         ResponseManager response = ResponseManager.getInstance();
-        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
+        Map<String, String> requestBodyMap = GeneralUtils.readPost(req.getReader());
 
-        String email = postData.get("email");
-        String password = postData.get("password");
-        String nome = postData.get("nome");
-        String cognome = postData.get("cognome");
-        String data_nascita = postData.get("data_nascita");
-        String cod_fis = postData.get("cod_fis");
+        String email = requestBodyMap.get("email");
+        String password = requestBodyMap.get("password");
+        String nome = requestBodyMap.get("nome");
+        String cognome = requestBodyMap.get("cognome");
+        String data_nascita = requestBodyMap.get("data_nascita");
+        String cod_fis = requestBodyMap.get("cod_fis");
 
         Pattern email_regex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         Pattern password_regex = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");

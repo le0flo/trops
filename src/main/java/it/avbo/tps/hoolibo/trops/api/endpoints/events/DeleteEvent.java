@@ -1,5 +1,6 @@
 package it.avbo.tps.hoolibo.trops.api.endpoints.events;
 
+import it.avbo.tps.hoolibo.trops.api.database.dao.EventDAO;
 import it.avbo.tps.hoolibo.trops.api.managers.ResponseManager;
 import it.avbo.tps.hoolibo.trops.api.managers.SessionsManager;
 import it.avbo.tps.hoolibo.trops.api.utils.GeneralUtils;
@@ -11,17 +12,21 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.UUID;
 
 @WebServlet("/events/delete")
 public class DeleteEvent extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
         ResponseManager response = ResponseManager.getInstance();
-        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
+        Map<String, String> requestBodyMap = GeneralUtils.readPost(req.getReader());
+
+        String uuid = requestBodyMap.get("uuid");
 
         try {
             String authorization = req.getHeader("Authorization");
@@ -29,10 +34,18 @@ public class DeleteEvent extends HttpServlet {
 
             if (account == null) {
                 response.errorInvalidSessionUUID(resp);
+            } else if (uuid == null) {
+                response.errorNullFields(resp);
             } else {
-                response.success(resp, null);
+                boolean success = EventDAO.getInstance().delete(UUID.fromString(uuid), account);
+
+                if (success) {
+                    response.success(resp, null);
+                } else {
+                    response.errorEventNotOwned(resp);
+                }
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLException e) {
             response.handleException(resp, e, this.getClass());
         }
     }

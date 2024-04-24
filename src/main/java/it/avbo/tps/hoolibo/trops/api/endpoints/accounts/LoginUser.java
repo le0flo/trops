@@ -28,16 +28,16 @@ import java.util.UUID;
 public class LoginUser extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
         ResponseManager response = ResponseManager.getInstance();
         SessionsManager sessionsManager = SessionsManager.getInstance();
-        Map<String, String> postData = GeneralUtils.readPost(req.getReader());
+        Map<String, String> requestBodyMap = GeneralUtils.readPost(req.getReader());
 
-        String session = postData.get("session");
-        String email = postData.get("email");
-        String password = postData.get("password");
+        String session = requestBodyMap.get("session");
+        String email = requestBodyMap.get("email");
+        String password = requestBodyMap.get("password");
 
         try {
             if (session == null && (email == null || password == null)) {

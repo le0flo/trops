@@ -118,6 +118,36 @@ public class ResponseManager {
         resp.setStatus(500);
     }
 
+    public void errorEventNotOwned(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 8);
+        message.put("motivazione", "Non sei il proprietario dell'evento indicato");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
+    }
+
+    public void errorAlreadySubscribed(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 9);
+        message.put("motivazione", "Sei già iscritto a questo evento");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
+    }
+
+    public void errorNotSubscribed(HttpServletResponse resp) throws IOException {
+        message.clear();
+        message.put("esito", "fallito");
+        message.put("codice", 10);
+        message.put("motivazione", "Non eri iscritto a questo evento");
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(500);
+    }
+
     public static ResponseManager getInstance() {
         if (instance == null) {
             instance = new ResponseManager();
