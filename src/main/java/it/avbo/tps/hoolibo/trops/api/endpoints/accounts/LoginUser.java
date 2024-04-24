@@ -66,7 +66,7 @@ public class LoginUser extends HttpServlet {
                     response.success(resp, null);
                 }
             }
-        } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e) {
             response.handleException(resp, e, this.getClass());
         }
     }
