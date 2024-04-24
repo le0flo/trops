@@ -39,7 +39,6 @@ public class LoginUser extends HttpServlet {
         String email = postData.get("email");
         String password = postData.get("password");
 
-        postData.keySet().forEach(System.out::println);
         System.out.println(session + " - " + email + " - " + password);
 
         try {
