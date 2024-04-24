@@ -12,11 +12,17 @@ servers:
 tags:
   - name: Accounts
     description: Gli endpoint responsabili per la gestione degli account
+  - name: Profilo
+    description: \[WIP\] Gli endpoint responsabili per la gestione del profilo utente
   - name: Events
-    description: Gli endpoint responsabili per la gestione degli eventi
+    description: \[WIP\] Gli endpoint responsabili per la gestione degli eventi
+  - name: Places
+    description: \[WIP\] Gli endpoint responsabili per la gestione dei luoghi per gli eventi
+  - name: Sports
+    description: \[WIP\] Gli endpoint responsabili per la gestione delle discipline ammesse negli eventi
 
 externalDocs:
-  description: Quì trovi la repository con il codice sorgente e degli esempi di implementazione dell'api in JavaScript
+  description: Quì trovi la repository con il codice sorgente.
   url: https://github.com/le0flo/trops
 
 components:
@@ -50,7 +56,7 @@ components:
 
 paths:
   /account/register:
-    post:
+    put:
       summary: Registra un account utente nel sistema
       description: Questo endpoint serve per ottenere il cookie e la tipologia di utente, registrandone uno nuovo. Tutti i dati da inserire sono specificati sotto e devono rispettare alcuni criteri. Esempio, la mail deve essere una mail valida, la password deve avere minimo 8 caratteri e avere 1 carattere speciale, 1 maiuscola, 1 minuscola e 1 numero. Il codice fiscale deve essere un vero codice fiscale e il codice meccanografico dovrà essere uno effettivamente valido (10 caratteri, li potete trovare cercandoli online, quello delle aldini è tra gli esempi di input).
       tags:
@@ -171,6 +177,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/failure-response'
+  /events/create:
+    put:
+      summary: Crea un nuovo evento
+      description: Questo endpoint serve per creare un nuovo evento sportivo, salvarlo nel database e renderlo disponibile al pubblico. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Events
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - tipo
+                - sport
+                - data_event
+                - max_partecipanti
+                - titolo
+              properties:
+                tipo:
+                  type: string
+                  example: SCO
+                sport:
+                  type: string
+                  example: basket
+                data_event:
+                  type: string
+                  example: 2024-7-16 10:00:00
+                max_partecipanti:
+                  type: string
+                  example: 10
+                titolo:
+                  type: string
+                  example: Torneo di basket
+                descrizione:
+                  type: string
+                  example: Example event
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
   /events/list:
     get:
       summary: Ottieni la lista di tutti gli eventi disponibili
@@ -256,10 +314,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/failure-response'
-  /events/create:
+  /events/update:
     post:
-      summary: Crea un nuovo evento
-      description: Questo endpoint serve per creare un nuovo evento sportivo, salvarlo nel database e renderlo disponibile al pubblico. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      summary: Disiscriviti da un evento
+      description: Questo endpoint serve per disiscrivere un utente da un evento a cui sta partecipando o che si è iscritto in passato. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
       tags:
         - Events
       security:
@@ -271,30 +329,11 @@ paths:
             schema:
               type: object
               required:
-                - tipo
-                - sport
-                - data_event
-                - max_partecipanti
-                - titolo
+                - uuid
               properties:
-                tipo:
+                uuid:
                   type: string
-                  example: SCO
-                sport:
-                  type: string
-                  example: basket
-                data_event:
-                  type: string
-                  example: 2024-7-16 10:00:00
-                max_partecipanti:
-                  type: string
-                  example: 10
-                titolo:
-                  type: string
-                  example: Torneo di basket
-                descrizione:
-                  type: string
-                  example: Example event
+                  example: 550e8400-e29b-41d4-a716-446655440000
       responses:
         '200':
           description: Successo
@@ -375,11 +414,353 @@ paths:
               schema:
                 $ref: '#/components/schemas/failure-response'
   /events/unsubscribe:
-    delete:
+    post:
       summary: Disiscriviti da un evento
       description: Questo endpoint serve per disiscrivere un utente da un evento a cui sta partecipando o che si è iscritto in passato. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
       tags:
         - Events
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - uuid
+              properties:
+                uuid:
+                  type: string
+                  example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /places/create:
+    put:
+      summary: Crea un nuovo evento
+      description: Questo endpoint serve per creare un nuovo evento sportivo, salvarlo nel database e renderlo disponibile al pubblico. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Places
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - tipo
+                - sport
+                - data_event
+                - max_partecipanti
+                - titolo
+              properties:
+                tipo:
+                  type: string
+                  example: SCO
+                sport:
+                  type: string
+                  example: basket
+                data_event:
+                  type: string
+                  example: 2024-7-16 10:00:00
+                max_partecipanti:
+                  type: string
+                  example: 10
+                titolo:
+                  type: string
+                  example: Torneo di basket
+                descrizione:
+                  type: string
+                  example: Example event
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /places/list:
+    get:
+      summary: Ottieni la lista di tutti gli eventi disponibili
+      description: Questo endpoint serve per ottenere la lista di tutti gli eventi attivi futuri, presenti e passati. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Places
+      security:
+        - SessionToken: [ ]
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /places/list/filtered:
+    get:
+      summary: Ottieni la lista di alcuni degli eventi
+      description: Questo endpoint serve per ottenere la lista di tutti gli eventi attivi futuri, presenti e passati che rispettano un filtro particolare deciso dall'utente. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Places
+      security:
+        - SessionToken: [ ]
+      parameters:
+        - in: path
+          name: tipo
+          schema:
+            type: string
+            example: SCO
+          required: false
+          description: Tipologia degli eventi (scolastici o extra scolastici)
+        - in: path
+          name: sport
+          schema:
+            type: string
+            example: basket
+          required: false
+          description: Lo sport dell'evento (basket, calcio, pallavolo)
+        - in: path
+          name: datamin
+          schema:
+            type: string
+            example: 2024-5-16
+          required: false
+          description: La data minima degli eventi
+        - in: path
+          name: datamax
+          schema:
+            type: string
+            example: 2024-5-16
+          required: false
+          description: La data massima degli eventi
+        - in: path
+          name: partecipanti
+          schema:
+            type: int
+            example: 0
+          required: false
+          description: Il numero attuale di partecipanti
+        - in: path
+          name: maxpartecipanti
+          schema:
+            type: int
+            example: 10
+          required: false
+          description: Il numero massimo di partecipanti dell'evento
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /places/update:
+    post:
+      summary: Disiscriviti da un evento
+      description: Questo endpoint serve per disiscrivere un utente da un evento a cui sta partecipando o che si è iscritto in passato. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Places
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - uuid
+              properties:
+                uuid:
+                  type: string
+                  example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /places/delete:
+    delete:
+      summary: Elimina un event
+      description: Questo endpoint serve per eliminare un evento esistente. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Places
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - uuid
+              properties:
+                uuid:
+                  type: string
+                  example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /sports/create:
+    put:
+      summary: Crea un nuovo evento
+      description: Questo endpoint serve per creare un nuovo evento sportivo, salvarlo nel database e renderlo disponibile al pubblico. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Sports
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - tipo
+                - sport
+                - data_event
+                - max_partecipanti
+                - titolo
+              properties:
+                tipo:
+                  type: string
+                  example: SCO
+                sport:
+                  type: string
+                  example: basket
+                data_event:
+                  type: string
+                  example: 2024-7-16 10:00:00
+                max_partecipanti:
+                  type: string
+                  example: 10
+                titolo:
+                  type: string
+                  example: Torneo di basket
+                descrizione:
+                  type: string
+                  example: Example event
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /sports/list:
+    get:
+      summary: Ottieni la lista di tutti gli eventi disponibili
+      description: Questo endpoint serve per ottenere la lista di tutti gli eventi attivi futuri, presenti e passati. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Sports
+      security:
+        - SessionToken: [ ]
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /sports/update:
+    post:
+      summary: Disiscriviti da un evento
+      description: Questo endpoint serve per disiscrivere un utente da un evento a cui sta partecipando o che si è iscritto in passato. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Sports
+      security:
+        - SessionToken: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - uuid
+              properties:
+                uuid:
+                  type: string
+                  example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/success-response'
+        '500':
+          description: Fallimento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failure-response'
+  /sports/delete:
+    delete:
+      summary: Elimina un event
+      description: Questo endpoint serve per eliminare un evento esistente. Richiede un header di autorizzazione, che è il token che vi siete salvati prima, dal login oppure dalla registrazione. P.S. Continuare.
+      tags:
+        - Sports
       security:
         - SessionToken: [ ]
       requestBody:
