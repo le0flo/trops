@@ -39,8 +39,6 @@ public class LoginUser extends HttpServlet {
         String email = postData.get("email");
         String password = postData.get("password");
 
-        System.out.println(session + " - " + email + " - " + password);
-
         try {
             if (session == null && (email == null || password == null)) {
                 response.errorNullFields(resp);
