@@ -35,8 +35,10 @@ public class GeneralUtils {
                 String value = splittedValue[1];
                 int indexOfPercentage = -1;
                 while ((indexOfPercentage = value.indexOf("%")) != -1) {
-                    String oldChar = value.substring(indexOfPercentage, indexOfPercentage+2);
+                    String oldChar = value.substring(indexOfPercentage, indexOfPercentage+3);
+                    System.out.println(value);
                     value.replace(oldChar, convertCode(oldChar));
+                    System.out.println(value);
                 }
 
                 values.put(key, value);
