@@ -22,6 +22,7 @@ public class GeneralUtils {
 
         String line, key = null;
         while ((line = rd.readLine()) != null) {
+            System.out.println(line);
             if (line.startsWith("Content-Disposition: form-data; name=\"")) {
                 key = line.substring("Content-Disposition: form-data; name=\"".length(), line.length()-1);
             } else if (key != null && !line.isBlank()) {
