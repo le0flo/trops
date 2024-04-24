@@ -41,6 +41,8 @@ public class CreateEvent extends HttpServlet {
             String authorization = req.getHeader("Authorization");
             String account = GeneralUtils.checkSession(authorization);
 
+            // TODO controllo per il tipo di account
+
             if (account == null) {
                 response.errorInvalidSessionUUID(resp);
             } else if (tipo == null || sport == null || data_event == null || max_partecipanti == null || titolo == null) {
