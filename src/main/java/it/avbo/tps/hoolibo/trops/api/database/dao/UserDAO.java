@@ -15,8 +15,8 @@ public class UserDAO {
     private String selectUser, insertUser;
 
     public UserDAO() {
-        selectUser = "SELECT tipo, hash, nome, cognome, data_nascita, cod_fis FROM accounts WHERE email = ?";
-        insertUser = "INSERT INTO accounts (tipo,email,hash,nome,cognome,data_nascita,cod_fis) VALUES (?,?,?,?,?,?,?)";
+        selectUser = "SELECT user_tipo, user_hash, user_nome, user_cognome, user_data_nascita, user_cod_fis FROM accounts WHERE user_email = ?";
+        insertUser = "INSERT INTO accounts (user_email, user_tipo, user_hash, user_nome, user_cognome, user_data_nascita, user_cod_fis) VALUES (?,?,?,?,?,?,?)";
     }
 
     public boolean insert(String email, String password, String nome, String cognome, Date data_nascita, String cod_fis) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
