@@ -12,14 +12,13 @@ public class EventDAO {
 
     private static EventDAO instance = null;
 
-
     private String fetchAllEvents, selectEvent, insertEvent, deleteEvent, insertSubscription, deleteSubscription;
 
     private EventDAO() {
-        fetchAllEvents = "SELECT event_uuid, tipo, sport, data, max_partecipanti, titolo, descrizione, organizer FROM events";
-        selectEvent = "SELECT tipo, sport, data, max_partecipanti, titolo, descrizione, organizer FROM events WHERE event_uuid = ?";
-        insertEvent = "INSERT INTO events (event_uuid,tipo,sport,data,max_partecipanti,titolo,descrizione,organizer) VALUES (?,?,?,?,?,?,?,?)";
-        deleteEvent = "DELETE FROM events WHERE event_uuid = ? AND organizer = ?";
+        fetchAllEvents = "SELECT event_uuid, event_tipo, event_sport, event_place, event_data, event_max_partecipanti, event_titolo, event_descrizione, event_organizzatore FROM events";
+        selectEvent = "SELECT event_tipo, event_sport, event_place, event_data, event_max_partecipanti, event_titolo, event_descrizione, event_organizzatore FROM events WHERE event_uuid = ?";
+        insertEvent = "INSERT INTO events (event_uuid, event_tipo, event_sport, event_place, event_data, event_max_partecipanti, event_titolo, event_descrizione, event_organizzatore) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        deleteEvent = "DELETE FROM events WHERE event_uuid = ? AND event_organizzatore = ?";
         insertSubscription = "INSERT INTO subscriptions (user,event) VALUES (?,?)";
         deleteSubscription = "DELETE FROM subscriptions WHERE user = ? AND event = ?";
     }
