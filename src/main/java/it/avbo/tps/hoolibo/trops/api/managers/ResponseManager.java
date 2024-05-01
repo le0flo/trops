@@ -1,6 +1,7 @@
 package it.avbo.tps.hoolibo.trops.api.managers;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,16 @@ public class ResponseManager {
     private JSONObject message = new JSONObject();
 
     public void success(HttpServletResponse resp, JSONObject values) throws IOException {
+        message.clear();
+        message.put("esito", "successo");
+        message.put("codice", 0);
+        message.put("risultato", values);
+
+        resp.getWriter().println(message.toString());
+        resp.setStatus(200);
+    }
+
+    public void successArray(HttpServletResponse resp, JSONArray values) throws IOException {
         message.clear();
         message.put("esito", "successo");
         message.put("codice", 0);

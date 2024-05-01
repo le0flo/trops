@@ -31,8 +31,9 @@ public class CreateEvent extends HttpServlet {
         Map<String, String> requestBodyMap = GeneralUtils.readPost(req.getReader());
 
         String tipo = requestBodyMap.get("tipo");
-        String sport = requestBodyMap.get("sport");
-        String data_event = requestBodyMap.get("data_event");
+        String sport = requestBodyMap.get("sport_uuid");
+        String place = requestBodyMap.get("sport_uuid");
+        String data_event = requestBodyMap.get("data");
         String max_partecipanti = requestBodyMap.get("max_partecipanti");
         String titolo = requestBodyMap.get("titolo");
         String descrizione = requestBodyMap.get("descrizione");
@@ -45,7 +46,7 @@ public class CreateEvent extends HttpServlet {
 
             if (account == null) {
                 response.errorInvalidSessionUUID(resp);
-            } else if (tipo == null || sport == null || data_event == null || max_partecipanti == null || titolo == null) {
+            } else if (tipo == null || sport == null || place == null || data_event == null || max_partecipanti == null || titolo == null) {
                 response.errorNullFields(resp);
             } else if (tipo.equals("SCO") || tipo.equals("EXT")) {
                 int maxPartecipanti = Integer.parseInt(max_partecipanti);
@@ -53,7 +54,7 @@ public class CreateEvent extends HttpServlet {
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-M-d hh:mm:ss");
                 Timestamp data = Timestamp.valueOf(LocalDateTime.parse(data_event ,df));
 
-                boolean success = EventDAO.getInstance().insert(tipo, sport, data, maxPartecipanti, titolo, descrizione, account);
+                boolean success = EventDAO.getInstance().insert(tipo, sport, place, data, maxPartecipanti, titolo, descrizione, account);
 
                 if (success) {
                     response.success(resp, null);
