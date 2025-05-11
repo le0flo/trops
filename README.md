@@ -1,5 +1,5 @@
 # Trops
 
-### Installtion
+### Installation
 
 - *TODO*
