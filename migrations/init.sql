@@ -1,13 +1,7 @@
-# Crea il database
-
+-- Database
 CREATE DATABASE IF NOT EXISTS trops;
 
-# Crea le varie tabelle
-
---
--- Table structure for table `accounts`
---
-
+-- Accounts
 CREATE TABLE IF NOT EXISTS `accounts` (
     `user_email` varchar(255) NOT NULL,
     `user_tipo` varchar(3) NOT NULL DEFAULT 'USR',
@@ -19,10 +13,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
     PRIMARY KEY (`user_email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `places`
---
-
+-- Places
 CREATE TABLE IF NOT EXISTS `places` (
     `place_uuid` varchar(36) NOT NULL,
     `place_cap` varchar(5) NOT NULL,
@@ -33,20 +24,14 @@ CREATE TABLE IF NOT EXISTS `places` (
     PRIMARY KEY (`place_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `sports`
---
-
+-- Sports
 CREATE TABLE IF NOT EXISTS `sports` (
     `sport_uuid` varchar(36) NOT NULL,
     `sport_nome` varchar(60) NOT NULL,
     PRIMARY KEY (`sport_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `events`
---
-
+-- Events
 CREATE TABLE IF NOT EXISTS `events` (
     `event_uuid` varchar(36) NOT NULL,
     `event_tipo` varchar(3) NOT NULL,
@@ -66,10 +51,7 @@ CREATE TABLE IF NOT EXISTS `events` (
     CONSTRAINT `events_sports_FK` FOREIGN KEY (`event_sport`) REFERENCES `sports` (`sport_uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `subscriptions`
---
-
+-- Subscriptions
 CREATE TABLE IF NOT EXISTS `subscriptions` (
     `user` varchar(255) NOT NULL,
     `event` varchar(36) NOT NULL,
