@@ -28,7 +28,7 @@ services:
 
     volumes:
       - ./mariadb:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/1.sql
     
     networks:
       - trops-backend-net
