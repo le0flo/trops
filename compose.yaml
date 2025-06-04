@@ -1,38 +1,48 @@
 services:
-  redis:
-    image: redis
-    restart: always
-    networks:
-      - backend
-
-  db:
-    image: mariadb
-    restart: always
-    environment:
-      - MARIADB_ROOT_PASSWORD=${TROPS_DB_PASSWORD}
-    networks:
-      - backend
-    volumes:
-      - "./mariadb:/var/lib/mysql"
-      - "./init.sql:/docker-entrypoint-initdb.d/1.sql"
-
   api:
     build: .
-    restart: always
-    environment:
-      - REDIS_HOST=redis
-      - DATABASE_HOST=jdbc:mariadb://db:3306/trops
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=${TROPS_DB_PASSWORD}
-    ports:
-      - 8001:8080
+    restart: unless-stopped
+
     depends_on:
+      - mariadb
       - redis
-      - db
+    
+    environment:
+      REDIS_HOST: redis
+      DATABASE_HOST: jdbc:mariadb://mariadb:3306/trops
+      DATABASE_USER: root
+      DATABASE_PASSWORD: ${TROPS_DB_PASSWORD}
+    
+    ports:
+      - 8080:8080
+    
     networks:
-      - backend
+      - trops-backend-net
+
+  mariadb:
+    image: mariadb
+    restart: unless-stopped
+    
+    environment:
+      MARIADB_ROOT_PASSWORD: ${TROPS_DB_PASSWORD}
+
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/1.sql
+    
+    networks:
+      - trops-backend-net
+    
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+    volumes:
+      - ./redis:/data
+    
+    networks:
+      - trops-backend-net
 
 networks:
-  backend:
-    name: Trops backend network
+  trops-backend-net:
     driver: bridge
