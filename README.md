@@ -8,4 +8,4 @@
 ### Installation
 
 1. Set the `TROPS_DB_PASSWORD` environment variable.
-2. To run *Simple Accounts* in the background, use `docker compose up -d`
+2. To run *Trops* in the background, use `docker compose up -d`
